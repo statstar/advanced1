@@ -1,0 +1,66 @@
+# 데이터 유형
+## 1. 범주형 (명목척도, 순서척도)
+table(표), barplot(그림)
+mtcars$gear %>% table %>% barplot
+mtcars$gear %>% table %>% pie
+
+## 2. 연속형 (등간척도, 비척도)
+summary(요약값), boxplot(), hist()
+mtcars$mpg %>% summary
+mtcars$mpg %>% boxplot
+mtcars$mpg %>% hist
+mtcars$mpg %>% density %>% plot
+
+head(mtcars)
+
+# 이변량분석
+범주형 * 범주형 
+cyl * gear
+table(mtcars$cyl)
+table(mtcars$gear)
+
+mpg$class %>% table
+
+table(mtcars$cyl, mtcars$gear) %>% 
+  fisher.test
+
+table(mtcars$cyl, mtcars$gear) %>% 
+  barplot(beside=T, legend=row.names(.))
+
+카이제곱값 = sum(기대빈도 - 관측빈도)^2
+
+범주형 * 연속형 (평균비교)
+## 1. 시각화 
+boxplot(mpg~vs, mtcars)
+## 2. 요약값
+mtcars %>% 
+  group_by(vs) %>% 
+  summarise(n=n(), mean=mean(mpg), sd=sd(mpg))
+## 3. 등분산성
+var.test(mpg~vs, mtcars)
+## 4. t검정
+t.test(mpg~vs, mtcars, equal.var=T)
+
+## 1. 시각화 
+boxplot(mpg~gear, mtcars)
+
+## 2. 요약값
+mtcars %>% 
+  group_by(gear) %>% 
+  summarise(n=n(), mean=mean(mpg), sd=sd(mpg))
+
+## 3. 등분산성
+bartlett.test(mpg~gear, mtcars)
+
+## 4. 일원배치분산분석 
+out <- aov(mpg~factor(gear), mtcars) #등분산
+oneway.test(mpg~gear, mtcars) #이분산
+
+## 5. 사후분석
+TukeyHSD(out)
+
+## 연속형 * 연속형
+plot(mpg~wt, mtcars)
+lm(mpg~wt, mtcars)
+
+# 다변량
